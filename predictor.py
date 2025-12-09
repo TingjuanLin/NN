@@ -4,13 +4,10 @@ import numpy as np
 import pandas as pd
 
 model = joblib.load('nn_model.pkl')
-X_test = pd.read_csv ('model2.csv')
-
-feature_names = ["BMI Z-score","Sex","Age"]
 st.title ("Prediction Model2 for Hyperuricemia in Pediatric Hypertension")
-Age = st.number_input('Age (6-17 years):', min_value=6, max_value=18, value = 12)
-age = (Age-12.51221)/2.235874
-sex = st.selectbox("Sex:", options =[1, 2], format_func = lambda x:"Boys" if x==1 else "Girls")
+age = st.number_input('Age (6-17 years):', min_value=6, max_value=18, value = 12)
+Age = (age-12.51221)/2.235874
+Sex = st.selectbox("Sex:", options =[1, 2], format_func = lambda x:"Boys" if x==1 else "Girls")
 BMI = st.number_input("BMI (kg/m^2):", min_value = 1, max_value = 100, value = 20)
 # 定义LMS数据
 boys_data = pd.DataFrame({
@@ -105,8 +102,8 @@ def calculate_bmi_zscore(age, bmi, sex, lms_data):
         z_score = np.nan
     
     return z_score
-bmi_z = calculate_bmi_zscore(Age, BMI, sex, lms_data)
-feature_values = [bmi_z, sex, age]
+BMI Z-score = calculate_bmi_zscore(age, BMI, Sex, lms_data)
+feature_values = [BMI Z-score, Age, Sex]
 features = np.array([feature_values])
 if st.button('Predict'):
     predict_class = model.predict(features)[0]
@@ -122,5 +119,6 @@ if st.button('Predict'):
     else:
         st.markdown(f"<h1 style='color: #388E3C; font-weight: bold; font-size: 32px;'>Predicted Class: {predict_class} (No hyperuricemia)</h1>", 
                     unsafe_allow_html=True)
+
 
 
