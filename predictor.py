@@ -2,24 +2,16 @@ import streamlit as st
 import joblib
 import numpy as np
 import pandas as pd
-import shap
-import matplotlib.pyplot as plt
 
-model = joblib.load('svm_model2.pkl')
-X_test = pd.read_csv ('X_test.csv')
-y_test = pd.read_csv ('y_test.csv')
-y_test_values = y_test['hua'].values
+model = joblib.load('nn_model.pkl')
+X_test = pd.read_csv ('model2.csv')
 
-feature_names = ["bmi_z","sex","prealbumin","crea","age"]
-st.title ("Prediction Model for Hyperuricemia in Pediatric Hypertension")
+feature_names = ["BMI Z-score","Sex","Age"]
+st.title ("Prediction Model2 for Hyperuricemia in Pediatric Hypertension")
 Age = st.number_input('Age (6-17 years):', min_value=6, max_value=18, value = 12)
 age = (Age-12.51221)/2.235874
-sex = st.selectbox("Sex:", options =[0, 1], format_func = lambda x:"Boys" if x==0 else "Girls")
-Prealbumin = st.number_input('Prealbumin (mg/L):', min_value=1, max_value=1000, value = 41)
-prealbumin = (Prealbumin-235.2251)/43.65179
-Crea = st.number_input("Crea (μmol/L):", min_value = 1, max_value = 200, value = 41)
-crea = (Crea-53.54569)/12.28562
-BMI = st.number_input("BMI (kg/m^2):", min_value = 1, max_value = 100, value = 10)
+sex = st.selectbox("Sex:", options =[1, 2], format_func = lambda x:"Boys" if x==1 else "Girls")
+BMI = st.number_input("BMI (kg/m^2):", min_value = 1, max_value = 100, value = 20)
 # 定义LMS数据
 boys_data = pd.DataFrame({
     'age': [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0, 9.5, 
@@ -66,9 +58,9 @@ def calculate_bmi_zscore(age, bmi, sex, lms_data):
     z_score: BMI Z-score
     """
     # 根据性别选择对应的LMS数据
-    if sex == 0:  # 男童
+    if sex == 1:  # 男童
         data = lms_data['boys']
-    elif sex == 1:  # 女童
+    elif sex == 2:  # 女童
         data = lms_data['girls']
     else:
         # 如果不是1或2，返回NaN
@@ -114,7 +106,7 @@ def calculate_bmi_zscore(age, bmi, sex, lms_data):
     
     return z_score
 bmi_z = calculate_bmi_zscore(Age, BMI, sex, lms_data)
-feature_values = [bmi_z, sex, prealbumin, crea, age]
+feature_values = [bmi_z, sex, age]
 features = np.array([feature_values])
 if st.button('Predict'):
     predict_class = model.predict(features)[0]
@@ -130,4 +122,5 @@ if st.button('Predict'):
     else:
         st.markdown(f"<h1 style='color: #388E3C; font-weight: bold; font-size: 32px;'>Predicted Class: {predict_class} (No hyperuricemia)</h1>", 
                     unsafe_allow_html=True)
+
 
