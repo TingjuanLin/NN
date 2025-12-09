@@ -50,7 +50,7 @@ def safe_load_model(model_path):
                 return model
 
 # 使用安全加载函数
-model = safe_load_model('nn_model.pkl')
+model = safe_load_model('nn_model_fixed.pkl')
 
 
 st.title ("Prediction Model2 for Hyperuricemia in Pediatric Hypertension")
@@ -168,6 +168,7 @@ if st.button('Predict'):
     else:
         st.markdown(f"<h1 style='color: #388E3C; font-weight: bold; font-size: 32px;'>Predicted Class: {predict_class} (No hyperuricemia)</h1>", 
                     unsafe_allow_html=True)
+
 
 
 
