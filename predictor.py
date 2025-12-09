@@ -102,8 +102,8 @@ def calculate_bmi_zscore(age, bmi, sex, lms_data):
         z_score = np.nan
     
     return z_score
-BMI Z-score = calculate_bmi_zscore(age, BMI, Sex, lms_data)
-feature_values = [BMI Z-score, Age, Sex]
+bmi_z = calculate_bmi_zscore(age, BMI, Sex, lms_data)
+feature_values = [bmi_z, Age, Sex]
 features = np.array([feature_values])
 if st.button('Predict'):
     predict_class = model.predict(features)[0]
@@ -119,6 +119,7 @@ if st.button('Predict'):
     else:
         st.markdown(f"<h1 style='color: #388E3C; font-weight: bold; font-size: 32px;'>Predicted Class: {predict_class} (No hyperuricemia)</h1>", 
                     unsafe_allow_html=True)
+
 
 
 
